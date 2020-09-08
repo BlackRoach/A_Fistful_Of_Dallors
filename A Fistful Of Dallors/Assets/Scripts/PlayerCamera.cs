@@ -7,8 +7,10 @@ public class PlayerCamera : MonoBehaviour
 {
     public float rotateSpeed = 1f;
     public float scrollSpeed = 200f;
-
+    public float smoothRotate = 5f;
     public Transform pivot;
+
+    private Vector3 targetPos;
 
     [System.Serializable]
     public class SphericalCoordinates
@@ -42,8 +44,8 @@ public class PlayerCamera : MonoBehaviour
             }
         }
 
-        public float _minRadius = 3f;
-        public float _maxRadius = 10f;
+        public float _minRadius = 5f;
+        public float _maxRadius = 5f;
 
         public float minAzimuth = 0f;
         private float _minAzimuth;
@@ -51,10 +53,10 @@ public class PlayerCamera : MonoBehaviour
         public float maxAzimuth = 360f;
         private float _maxAzimuth;
 
-        public float minElevation = 0f;
+        public float minElevation = -60f;
         private float _minElevation;
 
-        public float maxElevation = 90f;
+        public float maxElevation = 85f;
         private float _maxElevation;
 
         public SphericalCoordinates() { }
@@ -105,29 +107,31 @@ public class PlayerCamera : MonoBehaviour
     {
         sphericalCoordinates = new SphericalCoordinates(transform.position);
         transform.position = sphericalCoordinates.toCartesian + pivot.position;
+        targetPos = transform.position;
     }
 
     void Update()
     {
         float kh, kv, mh, mv, h, v;
-        kh = Input.GetAxis("Horizontal");
-        kv = Input.GetAxis("Vertical");
+       // kh = Input.GetAxis("Horizontal");
+       // kv = Input.GetAxis("Vertical");
 
-        bool anyMouseButton = Input.GetMouseButton(0) | Input.GetMouseButton(1) | Input.GetMouseButton(2);
+        //bool anyMouseButton = Input.GetMouseButton(0) | Input.GetMouseButton(1) | Input.GetMouseButton(2);
         // mh = anyMouseButton ? Input.GetAxis("Mouse X") : 0f;
         // mv = anyMouseButton ? Input.GetAxis("Mouse Y") : 0f;
-        mh = Input.GetAxis("Mouse X");
-        mv = Input.GetAxis("Mouse Y");
-        h = kh * kh > mh * mh ? kh : mh;
-        v = kv * kv > mv * mv ? kv : mv;
-
+        h = Input.GetAxis("Mouse X");
+        v = Input.GetAxis("Mouse Y");
+       // h = kh * kh > mh * mh ? kh : mh;
+       // v = kv * kv > mv * mv ? kv : mv;
+  
         if (h * h > Mathf.Epsilon || v * v > Mathf.Epsilon)
         {
-            transform.position
-                = sphericalCoordinates.Rotate(
-                    h * rotateSpeed * Time.deltaTime * -1, 
-                    v * rotateSpeed * Time.deltaTime * -1).toCartesian + pivot.position;
+            targetPos = sphericalCoordinates.Rotate(
+            h * rotateSpeed * Time.deltaTime * -1,
+            v * rotateSpeed * Time.deltaTime * -1).toCartesian + pivot.position;
+        
         }
+        transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
 
         float sw = -Input.GetAxis("Mouse ScrollWheel");
         if (sw * sw > Mathf.Epsilon)
