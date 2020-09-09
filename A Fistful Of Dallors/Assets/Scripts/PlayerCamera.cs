@@ -8,10 +8,10 @@ public class PlayerCamera : MonoBehaviour
     public float rotateSpeed = 1f;
     public float scrollSpeed = 200f;
     public float smoothRotate = 5f;
+    public float smoothScale = 10f;
     public Transform pivot;
 
     private Vector3 targetPos;
-
     [System.Serializable]
     public class SphericalCoordinates
     {
@@ -44,8 +44,8 @@ public class PlayerCamera : MonoBehaviour
             }
         }
 
-        public float _minRadius = 5f;
-        public float _maxRadius = 5f;
+        public float _minRadius = .5f;
+        public float _maxRadius = 3f;
 
         public float minAzimuth = 0f;
         private float _minAzimuth;
@@ -53,7 +53,7 @@ public class PlayerCamera : MonoBehaviour
         public float maxAzimuth = 360f;
         private float _maxAzimuth;
 
-        public float minElevation = -60f;
+        public float minElevation = -35f;
         private float _minElevation;
 
         public float maxElevation = 85f;
@@ -90,6 +90,8 @@ public class PlayerCamera : MonoBehaviour
         {
             azimuth += newAzimuth;
             elevation += newElevation;
+         
+            
             return this;
         }
 
@@ -98,6 +100,7 @@ public class PlayerCamera : MonoBehaviour
             radius += x;
             return this;
         }
+      
     }
 
     public SphericalCoordinates sphericalCoordinates;
@@ -113,6 +116,7 @@ public class PlayerCamera : MonoBehaviour
     void Update()
     {
         float kh, kv, mh, mv, h, v;
+        //kh kv는 이후 조이스틱으로 변경할 예정 일단 마우스 값만 이용
        // kh = Input.GetAxis("Horizontal");
        // kv = Input.GetAxis("Vertical");
 
@@ -126,22 +130,43 @@ public class PlayerCamera : MonoBehaviour
   
         if (h * h > Mathf.Epsilon || v * v > Mathf.Epsilon)
         {
+          
             targetPos = sphericalCoordinates.Rotate(
             h * rotateSpeed * Time.deltaTime * -1,
             v * rotateSpeed * Time.deltaTime * -1).toCartesian + pivot.position;
-        
+
         }
         transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
+
+        Vector3 ray_target = transform.forward * -10f;
+
+        RaycastHit hit;
+        Debug.DrawRay(transform.position, transform.forward * sphericalCoordinates.radius, Color.red);
+        Debug.DrawRay(transform.position, transform.forward * -.5f, Color.blue);
+        if (Physics.Raycast(transform.position, transform.forward, out hit,sphericalCoordinates.radius))
+        {
+            float dis = Vector3.Distance(transform.position, hit.point);
+            var targetPos = sphericalCoordinates.TranslateRadius(-dis).toCartesian + pivot.position;
+            transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
+           
+        }
+        else
+        {
+            var targetPos = sphericalCoordinates.TranslateRadius(0.01f * scrollSpeed * Time.deltaTime).toCartesian + pivot.position;
+            transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
+
+        }
+
 
         float sw = -Input.GetAxis("Mouse ScrollWheel");
         if (sw * sw > Mathf.Epsilon)
         {
-            transform.position = sphericalCoordinates.TranslateRadius(
-                sw * Time.deltaTime * scrollSpeed).toCartesian + pivot.position;
+            transform.position = sphericalCoordinates.TranslateRadius(sw * Time.deltaTime * scrollSpeed).toCartesian + pivot.position;
         }
-
         transform.LookAt(pivot.position);
     }
+
+  
 }
 
 
