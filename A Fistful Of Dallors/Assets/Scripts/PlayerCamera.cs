@@ -86,11 +86,11 @@ public class PlayerCamera : MonoBehaviour
             }
         }
 
-        public SphericalCoordinates Rotate(float newAzimuth, float newElevation)
+        public SphericalCoordinates Rotate(float newAzimuth, float newElevation, float x)
         {
             azimuth += newAzimuth;
             elevation += newElevation;
-         
+            radius += x;
             
             return this;
         }
@@ -125,37 +125,37 @@ public class PlayerCamera : MonoBehaviour
         // mv = anyMouseButton ? Input.GetAxis("Mouse Y") : 0f;
         h = Input.GetAxis("Mouse X");
         v = Input.GetAxis("Mouse Y");
-       // h = kh * kh > mh * mh ? kh : mh;
-       // v = kv * kv > mv * mv ? kv : mv;
-  
-        if (h * h > Mathf.Epsilon || v * v > Mathf.Epsilon)
-        {
-          
-            targetPos = sphericalCoordinates.Rotate(
-            h * rotateSpeed * Time.deltaTime * -1,
-            v * rotateSpeed * Time.deltaTime * -1).toCartesian + pivot.position;
+        // h = kh * kh > mh * mh ? kh : mh;
+        // v = kv * kv > mv * mv ? kv : mv;
+        //if (h * h > Mathf.Epsilon || v * v > Mathf.Epsilon)
+        //{
 
-        }
-        transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
 
-        Vector3 ray_target = transform.forward * -10f;
+
+        //}
 
         RaycastHit hit;
-        Debug.DrawRay(transform.position, transform.forward * sphericalCoordinates.radius, Color.red);
-        Debug.DrawRay(transform.position, transform.forward * -.5f, Color.blue);
-        if (Physics.Raycast(transform.position, transform.forward, out hit,sphericalCoordinates.radius))
+        float rad_val = 0f;
+        //Debug.DrawRay(transform.position, transform.forward * sphericalCoordinates.radius, Color.red);
+        //Debug.DrawRay(transform.position, transform.forward * -.5f, Color.blue);
+        if (Physics.Raycast(transform.position, transform.forward, out hit, sphericalCoordinates.radius))
         {
             float dis = Vector3.Distance(transform.position, hit.point);
-            var targetPos = sphericalCoordinates.TranslateRadius(-dis).toCartesian + pivot.position;
-            transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
-           
+            rad_val = -(dis + 0.5f);
         }
-        else
+        else if (!Physics.Raycast(transform.position, transform.forward * -1f, out hit, .5f))
         {
             var targetPos = sphericalCoordinates.TranslateRadius(0.01f * scrollSpeed * Time.deltaTime).toCartesian + pivot.position;
-            transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
-
+            rad_val = 0.01f * scrollSpeed * Time.deltaTime;
         }
+        targetPos = sphericalCoordinates.Rotate(
+            h * rotateSpeed * Time.deltaTime * -1,
+            v * rotateSpeed * Time.deltaTime * -1,
+            rad_val).toCartesian + pivot.position;
+       
+        transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
+
+        
 
 
         float sw = -Input.GetAxis("Mouse ScrollWheel");
