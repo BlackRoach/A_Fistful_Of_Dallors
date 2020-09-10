@@ -10,29 +10,32 @@ public class PlayerData
 }
 public class PlayerFacade : MonoSingleton<PlayerFacade>
 {
-    public readonly Animator animator_readonly;
-    private Animator animator;
+  
+    public Animator animator;
 
-    public readonly Rigidbody rigidbody_readonly;
-    private Rigidbody rigidbody;
+  
+    public Rigidbody rigidbody;
 
+   
+    public Camera camera;
+
+    static readonly public PlayerIdle playerIdle = new PlayerIdle();
+    static readonly public PlayerMove playerMove = new PlayerMove();
     public StateMachine<PlayerFacade> playerState;
 
-    public PlayerFacade()
-    {
-        animator_readonly = animator;
-        rigidbody_readonly = rigidbody;
-    }
+  
     public override void Init()
     {
         base.Init();
-
+        playerState = new StateMachine<PlayerFacade>();
         animator = this.gameObject.GetComponent<Animator>();
         rigidbody = this.gameObject.GetComponent<Rigidbody>();
-        
+        playerState.Init(this, playerIdle);
+      
+        camera = Camera.main;
     }
     public void Update()
     {
-
+        playerState.Update();
     }
 }

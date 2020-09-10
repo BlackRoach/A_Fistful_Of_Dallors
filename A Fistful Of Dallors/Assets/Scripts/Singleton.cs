@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Singleton<T>
 {
-    protected static T instance;
+    private static T instance;
     public static T Instance
     {
         get

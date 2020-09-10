@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PlayerCamera : MonoBehaviour
+public class PlayerCamera : MonoSingleton<PlayerCamera>
 {
     public float rotateSpeed = 1f;
     public float scrollSpeed = 200f;
@@ -70,8 +70,8 @@ public class PlayerCamera : MonoBehaviour
             _maxElevation = Mathf.Deg2Rad * maxElevation;
 
             radius = cartesianCoordinate.magnitude;
-            azimuth = Mathf.Atan2(cartesianCoordinate.z, cartesianCoordinate.x);
-            elevation = Mathf.Asin(cartesianCoordinate.y / radius);
+            azimuth = 0f;//Mathf.Atan2(cartesianCoordinate.z, cartesianCoordinate.x);
+            elevation = 0f;//Mathf.Asin(cartesianCoordinate.y / radius);
         }
 
         public Vector3 toCartesian
