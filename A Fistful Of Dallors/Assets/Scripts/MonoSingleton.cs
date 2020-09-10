@@ -20,8 +20,5 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
         instance = this as T;
         Init();
     }
-    public virtual void Init()
-    {
-
-    }
+    public virtual void Init() { }
 }
