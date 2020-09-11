@@ -26,6 +26,7 @@ public class PlayerIdle : IState<PlayerFacade>
         
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
+       
     }
     public void FixedUpdate(PlayerFacade target)
     {

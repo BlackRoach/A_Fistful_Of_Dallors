@@ -33,9 +33,11 @@ public class PlayerMove : IState<PlayerFacade>
         vertical = Input.GetAxis("Vertical");
 
         var player = PlayerFacade.Instance;
-        player.transform.Translate(Vector3.forward * Time.deltaTime * vertical*5f);
-        player.transform.Translate(Vector3.right * Time.deltaTime * horizontal * 5f);
-        var temp = player.camera.transform.localRotation;
+        var dir = new Vector3(horizontal, 0, vertical);
+        dir = player.transform.TransformDirection(dir) * 5f;
+
+        player.characterController.Move(dir * Time.deltaTime);
+        var temp = player.cameraTrans.localRotation;
         var rotation = new Quaternion(0, temp.y, 0, temp.w);
         player.transform.rotation = Quaternion.Slerp(player.transform.rotation,
             rotation, 5f * Time.deltaTime);
