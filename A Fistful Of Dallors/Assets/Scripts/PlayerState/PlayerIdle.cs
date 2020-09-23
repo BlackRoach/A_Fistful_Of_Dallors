@@ -7,11 +7,15 @@ public class PlayerIdle : IState<PlayerFacade>
     private float vertical;
     public void Enter(PlayerFacade target)
     {
-        PlayerFacade.Instance.animator.SetBool("Walking", false);
+       
+            PlayerFacade.Instance.animator.SetBool("Foward", false);
+      
     }
     public void Exit(PlayerFacade target)
     {
-        PlayerFacade.Instance.animator.SetBool("Walking", true);
+       
+            PlayerFacade.Instance.animator.SetBool("Foward", true);
+     
     }
     public void HandleInput(PlayerFacade target)
     {

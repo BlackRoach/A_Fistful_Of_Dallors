@@ -10,11 +10,18 @@ public class PlayerMove : IState<PlayerFacade>
   
     public void Enter(PlayerFacade target)
     {
-        PlayerFacade.Instance.animator.SetBool("Walking", true);
+       
+            PlayerFacade.Instance.animator.SetBool("Foward", true);
+   
+
     }
     public void Exit(PlayerFacade target)
     {
-        PlayerFacade.Instance.animator.SetBool("Walking", false);
+       
+            PlayerFacade.Instance.animator.SetBool("Foward", false);
+
+      
+        
     }
     public void HandleInput(PlayerFacade target)
     {

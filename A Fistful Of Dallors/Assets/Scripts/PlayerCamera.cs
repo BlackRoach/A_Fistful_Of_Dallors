@@ -136,7 +136,7 @@ public class PlayerCamera : MonoSingleton<PlayerCamera>
 
         RaycastHit hit;
         float rad_val = 0f;
-        //Debug.DrawRay(transform.position, transform.forward * sphericalCoordinates.radius, Color.red);
+        //Debug.DrawRay(transform.position, transform.forward*100f, Color.red);
         //Debug.DrawRay(transform.position, transform.forward * -.5f, Color.blue);
         if (Physics.Raycast(transform.position, transform.forward, out hit, sphericalCoordinates.radius))
         {
