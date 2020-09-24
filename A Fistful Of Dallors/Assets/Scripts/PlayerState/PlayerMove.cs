@@ -4,49 +4,41 @@ using UnityEngine;
 
 public class PlayerMove : IState<PlayerFacade>
 {
-    private float horizontal;
-    private float vertical;
-
-  
     public void Enter(PlayerFacade target)
     {
        
-            PlayerFacade.Instance.animator.SetBool("Foward", true);
+          target.animator.SetBool("Foward", true);
    
 
     }
     public void Exit(PlayerFacade target)
     {
        
-            PlayerFacade.Instance.animator.SetBool("Foward", false);
+            target.animator.SetBool("Foward", false);
 
       
         
     }
     public void HandleInput(PlayerFacade target)
     {
-        var player = PlayerFacade.Instance;
-        if (horizontal != 0 || vertical != 0)
+        if (target.Horizontal != 0 || target.Vertical != 0)
             return;
         else
-            player.playerState.ChangeState(PlayerFacade.playerIdle);
+            target.playerState.ChangeState(PlayerFacade.playerIdle);
 
        
 
     }
     public void Update(PlayerFacade target)
     {
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
+  
+        var dir = new Vector3(target.Horizontal, 0, target.Vertical);
+        dir = target.transform.TransformDirection(dir) * 5f;
 
-        var player = PlayerFacade.Instance;
-        var dir = new Vector3(horizontal, 0, vertical);
-        dir = player.transform.TransformDirection(dir) * 5f;
-
-        player.characterController.Move(dir * Time.deltaTime);
-        var temp = player.cameraTrans.localRotation;
+        target.characterController.Move(dir * Time.deltaTime);
+        var temp = target.cameraTrans.localRotation;
         var rotation = new Quaternion(0, temp.y, 0, temp.w);
-        player.transform.rotation = Quaternion.Slerp(player.transform.rotation,
+        target.transform.rotation = Quaternion.Slerp(target.transform.rotation,
             rotation, 5f * Time.deltaTime);
     }
     public void FixedUpdate(PlayerFacade target)

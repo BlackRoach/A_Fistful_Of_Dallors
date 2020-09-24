@@ -3,33 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 public class PlayerIdle : IState<PlayerFacade>
 {
-    private float horizontal;
-    private float vertical;
+
     public void Enter(PlayerFacade target)
     {
        
-            PlayerFacade.Instance.animator.SetBool("Foward", false);
+            target.animator.SetBool("Foward", false);
       
     }
     public void Exit(PlayerFacade target)
     {
        
-            PlayerFacade.Instance.animator.SetBool("Foward", true);
+            target.animator.SetBool("Foward", true);
      
     }
     public void HandleInput(PlayerFacade target)
     {
-        var player = PlayerFacade.Instance;
-        if (horizontal == 0 && vertical == 0)
+      
+        if (target.Horizontal == 0 && target.Vertical == 0)
             return;
         else
-            player.playerState.ChangeState(PlayerFacade.playerMove);
+            target.playerState.ChangeState(PlayerFacade.playerMove);
     }
     public void Update(PlayerFacade target)
     {
         
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
+    
        
     }
     public void FixedUpdate(PlayerFacade target)
