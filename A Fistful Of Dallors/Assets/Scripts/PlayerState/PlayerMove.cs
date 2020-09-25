@@ -31,11 +31,13 @@ public class PlayerMove : IState<PlayerFacade>
     }
     public void Update(PlayerFacade target)
     {
-  
+        
+        //Move
         var dir = new Vector3(target.Horizontal, 0, target.Vertical);
         dir = target.transform.TransformDirection(dir) * 5f;
-
         target.characterController.Move(dir * Time.deltaTime);
+
+        //Rotate
         var temp = target.cameraTrans.localRotation;
         var rotation = new Quaternion(0, temp.y, 0, temp.w);
         target.transform.rotation = Quaternion.Slerp(target.transform.rotation,

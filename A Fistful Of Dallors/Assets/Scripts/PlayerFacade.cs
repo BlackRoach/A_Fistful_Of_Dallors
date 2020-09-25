@@ -24,13 +24,18 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
    
     public Transform cameraTrans;
 
+    [SerializeField]
+    private GameObject[] weapons;
+
     static readonly public PlayerIdle playerIdle = new PlayerIdle();
     static readonly public PlayerMove playerMove = new PlayerMove();
     static readonly public PlayerOnWeapon playerOnWeapon = new PlayerOnWeapon();
+    static readonly public PlayerAiming playerAiming = new PlayerAiming();
+
     public StateMachine<PlayerFacade> playerState;
     public StateMachine<PlayerFacade> playerEquip;
 
-    public WeaponType eqipState;
+  
 
     private float _horizontal;
     public float Horizontal { get { return _horizontal; } }
@@ -47,7 +52,7 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
 
         animator = this.gameObject.GetComponent<Animator>();
         characterController = this.gameObject.GetComponent<CharacterController>();
-        eqipState = WeaponType.None;
+
         _horizontal = 0;
         _vertical = 0;
 
@@ -63,5 +68,14 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
 
         _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
+    }
+    public void WeaponChange(int num, int cur)
+    {
+        if (cur > -1)
+            weapons[cur].SetActive(false);
+
+        if (num > -1)
+            weapons[num].SetActive(true);
+
     }
 }
