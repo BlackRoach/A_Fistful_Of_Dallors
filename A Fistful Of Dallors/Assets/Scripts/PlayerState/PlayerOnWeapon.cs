@@ -33,7 +33,7 @@ public class PlayerOnWeapon : IState<PlayerFacade>
             ChangeWeapon(target, -1);
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (equiped > -1 && Input.GetMouseButtonDown(1))
             target.playerEquip.ChangeState(PlayerFacade.playerAiming);
            
     }
@@ -46,6 +46,10 @@ public class PlayerOnWeapon : IState<PlayerFacade>
 
     }
 
+    public void LateUpdate(PlayerFacade target)
+    {
+
+    }
     private void ChangeWeapon(PlayerFacade target, int num)
     {
         if(equiped > -1)

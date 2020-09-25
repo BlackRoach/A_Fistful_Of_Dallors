@@ -30,6 +30,10 @@ public class PlayerIdle : IState<PlayerFacade>
     
        
     }
+    public void LateUpdate(PlayerFacade target)
+    {
+
+    }
     public void FixedUpdate(PlayerFacade target)
     {
 

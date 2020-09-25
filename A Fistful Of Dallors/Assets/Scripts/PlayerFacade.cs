@@ -24,6 +24,8 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
    
     public Transform cameraTrans;
 
+    public Transform aimTarget;
+
     [SerializeField]
     private GameObject[] weapons;
 
@@ -42,7 +44,7 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
 
     private float _vertical;
     public float Vertical { get { return _vertical; } }
-
+  
     public override void Init()
     {
         base.Init();
@@ -60,6 +62,7 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
         playerEquip.Init(this, playerOnWeapon);
       
         cameraTrans = Camera.main.transform;
+        aimTarget = Camera.main.transform.GetChild(0).transform;
     }
     public void Update()
     {
@@ -68,6 +71,10 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
 
         _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
+    }
+    public void LateUpdate()
+    {
+        playerEquip.LateUpdate();
     }
     public void WeaponChange(int num, int cur)
     {

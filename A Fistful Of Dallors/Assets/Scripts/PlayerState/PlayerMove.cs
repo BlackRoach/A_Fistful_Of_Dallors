@@ -47,7 +47,10 @@ public class PlayerMove : IState<PlayerFacade>
     {
 
     }
+    public void LateUpdate(PlayerFacade target)
+    {
 
+    }
 }
 
 public class PlayerMoveAimed : PlayerMove

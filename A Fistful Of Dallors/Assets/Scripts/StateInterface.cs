@@ -11,6 +11,8 @@ public interface IState<T>
 
     void Update(T target);
 
+    void LateUpdate(T target);
+
     void FixedUpdate(T target);
 }
 
@@ -62,6 +64,15 @@ public class StateMachine<T>
         if (curState != null)
         {
             curState.FixedUpdate(target);
+
+            curState.HandleInput(target);
+        }
+    }
+    public void LateUpdate()
+    {
+        if(curState != null)
+        {
+            curState.LateUpdate(target);
 
             curState.HandleInput(target);
         }

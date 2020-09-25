@@ -5,13 +5,17 @@ using UnityEngine;
 
 public class PlayerCamera : MonoSingleton<PlayerCamera>
 {
+    private Vector3 _targetPos;
+    private readonly float aimRad = 1f;
+    private readonly float normalRad = 3f;
+
     public float rotateSpeed = 1f;
     public float scrollSpeed = 200f;
     public float smoothRotate = 5f;
     public float smoothScale = 10f;
     public Transform pivot;
 
-    private Vector3 targetPos;
+    
     [System.Serializable]
     public class SphericalCoordinates
     {
@@ -110,7 +114,7 @@ public class PlayerCamera : MonoSingleton<PlayerCamera>
     {
         sphericalCoordinates = new SphericalCoordinates(transform.position);
         transform.position = sphericalCoordinates.toCartesian + pivot.position;
-        targetPos = transform.position;
+        _targetPos = transform.position;
     }
 
     void Update()
@@ -148,12 +152,12 @@ public class PlayerCamera : MonoSingleton<PlayerCamera>
             var targetPos = sphericalCoordinates.TranslateRadius(0.01f * scrollSpeed * Time.deltaTime).toCartesian + pivot.position;
             rad_val = 0.01f * scrollSpeed * Time.deltaTime;
         }
-        targetPos = sphericalCoordinates.Rotate(
+        _targetPos = sphericalCoordinates.Rotate(
             h * rotateSpeed * Time.deltaTime * -1,
             v * rotateSpeed * Time.deltaTime * -1,
             rad_val).toCartesian + pivot.position;
        
-        transform.position = Vector3.Lerp(transform.position, targetPos, smoothRotate * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, _targetPos, smoothRotate * Time.deltaTime);
 
         
 
@@ -166,6 +170,13 @@ public class PlayerCamera : MonoSingleton<PlayerCamera>
         transform.LookAt(pivot.position);
     }
 
+    public void AimCamera(bool isAim)
+    {
+        if (isAim)
+            sphericalCoordinates._maxRadius = aimRad;
+        else
+            sphericalCoordinates._maxRadius = normalRad;
+    }
   
 }
 
