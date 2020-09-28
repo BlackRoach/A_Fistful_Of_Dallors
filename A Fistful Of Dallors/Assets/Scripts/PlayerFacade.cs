@@ -8,13 +8,7 @@ public class PlayerData
     public float speed = 10;
 
 }
-public enum WeaponType
-{
-    None,
-    Pistol,
-    Rifle,
-    Shotgun
-}
+
 public class PlayerFacade : MonoSingleton<PlayerFacade>
 {
     public Animator animator;
@@ -76,7 +70,7 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
     {
         playerEquip.LateUpdate();
     }
-    public void WeaponChange(int num, int cur)
+    public void WeaponChange(int num, int cur)          
     {
         if (cur > -1)
             weapons[cur].SetActive(false);

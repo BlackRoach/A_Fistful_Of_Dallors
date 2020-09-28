@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAiming : IState<PlayerFacade>
 {
-    private Transform _spine;
+    private Transform _spine; // 상체 트랜스폼
 
     public void Enter(PlayerFacade target)
     {
@@ -39,7 +39,7 @@ public class PlayerAiming : IState<PlayerFacade>
     }
     public void LateUpdate(PlayerFacade target)
     {
-        var chestOffset = new Vector3(0, 140, -100);
+        var chestOffset = new Vector3(0, 140, -90);
         // 140 -100 라이플
         //155 -70 권총
         _spine.LookAt(target.aimTarget);
