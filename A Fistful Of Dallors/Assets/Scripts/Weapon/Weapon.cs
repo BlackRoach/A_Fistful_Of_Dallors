@@ -53,6 +53,10 @@ public abstract class Weapon : MonoBehaviour
         state = State.Reloading;
         //start reloading
     }
+    private IEnumerator ReloadRoutine()
+    {
+        yield return new WaitForSeconds(data.reloadTime);
+    }
     public void OnWeapon()
     {
         this.gameObject.SetActive(true);

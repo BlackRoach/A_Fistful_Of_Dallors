@@ -12,7 +12,6 @@ public class PlayerData
 public class PlayerFacade : MonoSingleton<PlayerFacade>
 {
     public Animator animator;
-
     
     public CharacterController characterController;
    
@@ -22,35 +21,31 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
 
     [SerializeField]
     private GameObject[] weapons;
-
+    #region Player State Object
     static readonly public PlayerIdle playerIdle = new PlayerIdle();
     static readonly public PlayerMove playerMove = new PlayerMove();
     static readonly public PlayerOnWeapon playerOnWeapon = new PlayerOnWeapon();
     static readonly public PlayerAiming playerAiming = new PlayerAiming();
+    #endregion
 
     public StateMachine<PlayerFacade> playerState;
     public StateMachine<PlayerFacade> playerEquip;
-
-  
-
-    private float _horizontal;
-    public float Horizontal { get { return _horizontal; } }
-
-    private float _vertical;
-    public float Vertical { get { return _vertical; } }
+    
+    public InputManager input;
   
     public override void Init()
     {
         base.Init();
+        input = new InputManager();
 
         playerState = new StateMachine<PlayerFacade>();
         playerEquip = new StateMachine<PlayerFacade>();
+       
 
         animator = this.gameObject.GetComponent<Animator>();
         characterController = this.gameObject.GetComponent<CharacterController>();
 
-        _horizontal = 0;
-        _vertical = 0;
+       
 
         playerState.Init(this, playerIdle);
         playerEquip.Init(this, playerOnWeapon);
@@ -60,11 +55,9 @@ public class PlayerFacade : MonoSingleton<PlayerFacade>
     }
     public void Update()
     {
+        input.Update();
         playerState.Update();
         playerEquip.Update();
-
-        _horizontal = Input.GetAxis("Horizontal");
-        _vertical = Input.GetAxis("Vertical");
     }
     public void LateUpdate()
     {

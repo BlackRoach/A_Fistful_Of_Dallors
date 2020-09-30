@@ -19,12 +19,11 @@ public class PlayerAiming : IState<PlayerFacade>
     }
     public void HandleInput(PlayerFacade target)
     {
-        if (Input.GetMouseButtonDown(0))
-            return;
-        else if (Input.GetMouseButtonUp(1))
+        
+        if (target.input.aimOff || target.animator.GetBool("Run"))
             target.playerEquip.ChangeState(PlayerFacade.playerOnWeapon);
-    
-            
+        
+
 
     }
     

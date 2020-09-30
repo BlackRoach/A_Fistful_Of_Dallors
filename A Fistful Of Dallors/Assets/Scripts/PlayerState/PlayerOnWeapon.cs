@@ -19,21 +19,21 @@ public class PlayerOnWeapon : IState<PlayerFacade>
     }
     public void HandleInput(PlayerFacade target)
     {
-        if (equiped != 0 && Input.GetKeyDown(KeyCode.Alpha1))
+        
+        if (equiped != 0 && target.input.onPistol)
         {
             ChangeWeapon(target, 0);
-       
         }
-        else if (equiped != 1 && Input.GetKeyDown(KeyCode.Alpha2))
+        else if (equiped != 1 && target.input.onRifle)
         {
             ChangeWeapon(target, 1);
         }
-        else if(equiped != -1 && Input.GetKeyDown(KeyCode.X))
+        else if(equiped != -1 && target.input.downWeapon)
         {
             ChangeWeapon(target, -1);
         }
-
-        if (equiped > -1 && Input.GetMouseButtonDown(1))
+        
+        if (equiped > -1 && target.input.aim)
             target.playerEquip.ChangeState(PlayerFacade.playerAiming);
            
     }

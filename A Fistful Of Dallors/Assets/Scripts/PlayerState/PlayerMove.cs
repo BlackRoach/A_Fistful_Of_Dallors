@@ -6,22 +6,22 @@ public class PlayerMove : IState<PlayerFacade>
 {
     public void Enter(PlayerFacade target)
     {
-       
-          target.animator.SetBool("Foward", true);
-   
+
+        target.animator.SetBool("Move", true);
+
 
     }
     public void Exit(PlayerFacade target)
     {
        
-            target.animator.SetBool("Foward", false);
+        target.animator.SetBool("Move", false);
 
       
         
     }
     public void HandleInput(PlayerFacade target)
     {
-        if (target.Horizontal != 0 || target.Vertical != 0)
+        if (target.input.Horizontal != 0 || target.input.Vertical != 0)
             return;
         else
             target.playerState.ChangeState(PlayerFacade.playerIdle);
@@ -33,7 +33,7 @@ public class PlayerMove : IState<PlayerFacade>
     {
         
         //Move
-        var dir = new Vector3(target.Horizontal, 0, target.Vertical);
+        var dir = new Vector3(target.input.Horizontal, 0, target.input.Vertical);
         dir = target.transform.TransformDirection(dir) * 5f;
         target.characterController.Move(dir * Time.deltaTime);
 
